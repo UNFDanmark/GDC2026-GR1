@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using Unity.Mathematics;
 using UnityEngine;
@@ -21,6 +22,9 @@ public class PlayerController : MonoBehaviour
     Rigidbody rb;
     Camera camera;
     bool canMove = true, canDash = true;
+
+    public GameObject slashbox360;
+    public float slashboxLifetime = 9999f;
     
     
     void Start()
@@ -33,6 +37,20 @@ public class PlayerController : MonoBehaviour
         actionJump.action.started += Jump;
         actionDash.action.Enable();
         actionDash.action.started += Dash;
+        actionAttack.action.Enable();
+        actionAttack.action.started += Attack;
+    }
+
+    void OnDisable()
+    {
+        actionMovement.action.Disable();
+        actionLook.action.Disable();
+        actionJump.action.Disable();
+        actionJump.action.started -= Jump;
+        actionDash.action.Disable();
+        actionDash.action.started -= Dash;
+        actionAttack.action.Disable();
+        actionAttack.action.started -= Attack;
     }
 
     void Update()
@@ -46,7 +64,7 @@ public class PlayerController : MonoBehaviour
 
             Vector2 rawMoveInput = actionMovement.action.ReadValue<Vector2>();
             Vector3 move = new Vector3(rawMoveInput.x, 0, rawMoveInput.y);
-            move *= moveSpeed * rb.linearDamping;
+            move *= moveSpeed * rb.linearDamping * Time.deltaTime;
             rb.AddRelativeForce(move);
         }
     }
@@ -75,8 +93,13 @@ public class PlayerController : MonoBehaviour
         rb.AddRelativeForce(move, ForceMode.Impulse);
     }
 
-    
-    
+
+    void Attack(InputAction.CallbackContext context)
+    {
+        GameObject slashboxtemp = Instantiate(slashbox360, transform);
+        Destroy(slashboxtemp, slashboxLifetime);
+    }
+
     IEnumerator disableMovement()
     {
         //Før/under dash
