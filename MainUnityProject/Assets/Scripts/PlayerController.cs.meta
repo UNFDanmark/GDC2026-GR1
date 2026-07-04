@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: 39ca2295f8306054cbfe4812d6b3f5d9
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - actionMovement: {fileID: -1680190386980627800, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+  - actionDash: {fileID: -7471211009204490832, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+  - actionJump: {instanceID: 0}
+  - actionAttack: {instanceID: 0}
+  - actionLook: {instanceID: 0}
+  - camera: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
