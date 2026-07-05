@@ -8,6 +8,8 @@ using UnityEngine.Serialization;
 public class PlayerController : MonoBehaviour
 {
     Animator animator;
+    AudioSource audiosource;
+    
     [Header("Movement")]
     public InputActionReference actionMovement;   // vector2
     public InputActionReference actionJump;       // button
@@ -25,9 +27,9 @@ public class PlayerController : MonoBehaviour
     
     [Header("Camera")]
     public InputActionReference actionLook;       // vector2
-    public float cameraSensX = 0.5f;
-    public float cameraSensY = 0.5f;
     public GameObject cameraGameObject;
+    float cameraSensX = 0.5f;
+    float cameraSensY = 0.5f;
     Camera camera;
     
     [Header("Attack")]
@@ -53,8 +55,16 @@ public class PlayerController : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
         animator = GetComponent<Animator>();
+        audiosource = GetComponent<AudioSource>();
+        SettingsManager.Instance.settingsChangedEvent.AddListener(ReloadSettings);
+        ReloadSettings();
     }
-
+    void ReloadSettings()
+    {
+        audiosource.volume = SettingsManager.Instance.soundVolume;
+        cameraSensX = SettingsManager.Instance.cameraSensX;
+        cameraSensY = SettingsManager.Instance.cameraSensY;
+    }
     void OnDisable()
     {
         actionMovement.action.Disable();
@@ -67,6 +77,7 @@ public class PlayerController : MonoBehaviour
         actionAttack.action.started -= Attack;
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
+        SettingsManager.Instance.settingsChangedEvent.RemoveListener(ReloadSettings);
     }
 
     void Update()
@@ -74,7 +85,7 @@ public class PlayerController : MonoBehaviour
         if (canMove)
         {
             Vector2 rawLookInput = actionLook.action.ReadValue<Vector2>();
-            Vector3 look = new Vector3(rawLookInput.y * cameraSensY, 0, 0);
+            Vector3 look = new Vector3(rawLookInput.y * -cameraSensY, 0, 0);
             cameraGameObject.transform.Rotate(look);
             rb.transform.Rotate(Vector3.up, rawLookInput.x * cameraSensX);
 

@@ -6,10 +6,27 @@ public class EnemyScript : MonoBehaviour
 {
     GameObject player;
     NavMeshAgent agent;
+    Rigidbody rb;
+    AudioSource audiosource;
+    public AudioClip[] deathSounds;
     void Start()
     {
         player = FindAnyObjectByType<PlayerController>().gameObject;
         agent = GetComponent<NavMeshAgent>();
+        rb = GetComponent<Rigidbody>();
+        audiosource = GetComponent<AudioSource>();
+        SettingsManager.Instance.settingsChangedEvent.AddListener(ReloadSettings);
+        ReloadSettings();
+    }
+
+    void OnDisable()
+    {
+        SettingsManager.Instance.settingsChangedEvent.RemoveListener(ReloadSettings);
+    }
+
+    void ReloadSettings()
+    {
+        audiosource.volume = SettingsManager.Instance.soundVolume;
     }
 
     void Update()
@@ -25,8 +42,11 @@ public class EnemyScript : MonoBehaviour
             agent.enabled = false;
             // <insert animation here>
             GetComponent<Collider>().enabled = false;
-            GetComponent<Rigidbody>().AddRelativeForce(new Vector3(0,30,-80), ForceMode.Impulse);
+            Vector3 cool = (transform.position - player.transform.position).normalized * 80;// + new Vector3(0, 30, 0);
+            cool.y = 30;
+            rb.linearVelocity = cool;
             // </insert animation here>
+            SoundPlayer.PlayRandomSound(audiosource, deathSounds);
             Destroy(gameObject, 2f); // 2f er standin for animation.
         }
     }
