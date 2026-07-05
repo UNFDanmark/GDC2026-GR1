@@ -3,28 +3,39 @@ using System.Collections;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Serialization;
 
 public class PlayerController : MonoBehaviour
 {
+    Animator animator;
+    [Header("Movement")]
     public InputActionReference actionMovement;   // vector2
-    public InputActionReference actionDash;       // button
     public InputActionReference actionJump;       // button
-    public InputActionReference actionAttack;     // button
-    public InputActionReference actionLook;       // vector2
     public float moveSpeed = 10f;
-    public float cameraSensX = 0.5f;
-    public float cameraSensY = 0.5f;
     public float jumpForce = 10f;
+    Rigidbody rb;
+    bool canMove = true;
+    
+    [Header("Dash")]
+    public InputActionReference actionDash;       // button
     public float dashSpeed = 10f;
     public float dashDisablesMovementFor = 0.5f;
     public float dashCooldown = 2f;
+    bool canDash = true;
+    
+    [Header("Camera")]
+    public InputActionReference actionLook;       // vector2
+    public float cameraSensX = 0.5f;
+    public float cameraSensY = 0.5f;
     public GameObject cameraGameObject;
-    Rigidbody rb;
     Camera camera;
-    bool canMove = true, canDash = true;
-
-    public GameObject slashbox360;
-    public float slashboxLifetime = 9999f;
+    
+    [Header("Attack")]
+    public InputActionReference actionAttack;     // button
+    public GameObject attackBox;
+    public float attackLifetime = 0.2f;
+    public float attackCooldown = 0.5f;
+    bool canAttack = true;
     
     
     void Start()
@@ -41,6 +52,7 @@ public class PlayerController : MonoBehaviour
         actionAttack.action.started += Attack;
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+        animator = GetComponent<Animator>();
     }
 
     void OnDisable()
@@ -100,10 +112,19 @@ public class PlayerController : MonoBehaviour
 
     void Attack(InputAction.CallbackContext context)
     {
-        GameObject slashboxtemp = Instantiate(slashbox360, transform);
-        Destroy(slashboxtemp, slashboxLifetime);
+        if (!canAttack) return;
+        StartCoroutine(disableAttack());
+        animator.SetTrigger("attack");
+        GameObject tmpAttackBox = Instantiate(attackBox, transform);
+        Destroy(tmpAttackBox, attackLifetime);
     }
 
+    IEnumerator disableAttack()
+    {
+        canAttack = false;
+        yield return new WaitForSecondsRealtime(attackCooldown);
+        canAttack = true;
+    }
     IEnumerator disableMovement()
     {
         //Før/under dash

@@ -23,8 +23,10 @@ public class EnemyScript : MonoBehaviour
         if (other.gameObject.CompareTag("PlayerHit"))
         {
             agent.enabled = false;
-            // insert animation here
-            GetComponent<Rigidbody>().AddRelativeForce(Vector3.back * 100, ForceMode.Impulse);
+            // <insert animation here>
+            GetComponent<Collider>().enabled = false;
+            GetComponent<Rigidbody>().AddRelativeForce(new Vector3(0,30,-80), ForceMode.Impulse);
+            // </insert animation here>
             Destroy(gameObject, 2f); // 2f er standin for animation.
         }
     }
