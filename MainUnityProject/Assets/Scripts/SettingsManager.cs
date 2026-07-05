@@ -14,6 +14,7 @@ public class SettingsManager : MonoBehaviour
         Instance = this;
         PermaLoad();
         settingsChangedEvent.AddListener(SaveSettings);
+        DontDestroyOnLoad(gameObject);
     }
 
     void OnDisable()
