@@ -8,7 +8,7 @@ public class SettingsManager : MonoBehaviour
     [HideInInspector] public float cameraSensX, cameraSensY, musicVolume, soundVolume;
 
     public UnityEvent settingsChangedEvent;
-    void Start()
+    void Awake()
     {
         if (Instance != null) Destroy(gameObject);
         Instance = this;
