@@ -39,6 +39,8 @@ public class PlayerController : MonoBehaviour
         actionDash.action.started += Dash;
         actionAttack.action.Enable();
         actionAttack.action.started += Attack;
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
     }
 
     void OnDisable()
@@ -51,6 +53,8 @@ public class PlayerController : MonoBehaviour
         actionDash.action.started -= Dash;
         actionAttack.action.Disable();
         actionAttack.action.started -= Attack;
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
     }
 
     void Update()
