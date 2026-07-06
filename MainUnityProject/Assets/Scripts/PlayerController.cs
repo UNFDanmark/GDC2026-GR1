@@ -1,21 +1,20 @@
-using System;
 using System.Collections;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Rendering;
-using UnityEngine.Serialization;
 
 public class PlayerController : MonoBehaviour
 {
     Animator animator;
-    AudioSource audiosource;
     
     [Header("Movement")]
     public InputActionReference actionMovement;   // vector2
     public InputActionReference actionJump;       // button
     public float moveSpeed = 10f;
     public float jumpForce = 10f;
+    public AudioSource audioSourceMove;
+    public AudioSource audioSourceJump;
     Rigidbody rb;
     bool canMove = true;
     
@@ -24,8 +23,9 @@ public class PlayerController : MonoBehaviour
     public float dashSpeed = 10f;
     public float dashDisablesMovementFor = 0.5f;
     public float dashCooldown = 2f;
-    bool canDash = true;
     public Volume motionBlurVolume;
+    public AudioSource audioSourceDash;
+    bool canDash = true;
     
     [Header("Camera")]
     public InputActionReference actionLook;       // vector2
@@ -39,6 +39,7 @@ public class PlayerController : MonoBehaviour
     public GameObject attackBox;
     public float attackLifetime = 0.2f;
     public float attackCooldown = 0.5f;
+    public AudioSource audioSourceAttack;
     bool canAttack = true;
     
     
@@ -57,13 +58,15 @@ public class PlayerController : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
         animator = GetComponent<Animator>();
-        audiosource = GetComponent<AudioSource>();
         SettingsManager.SettingsChangedEvent.AddListener(ReloadSettings);
         ReloadSettings();
     }
     void ReloadSettings()
     {
-        audiosource.volume = SettingsManager.SoundVolume;
+        audioSourceMove.volume = SettingsManager.SoundVolume;
+        audioSourceJump.volume = SettingsManager.SoundVolume;
+        audioSourceDash.volume = SettingsManager.SoundVolume;
+        audioSourceAttack.volume = SettingsManager.SoundVolume;
         cameraSensX = SettingsManager.CameraSensX;
         cameraSensY = SettingsManager.CameraSensY;
     }

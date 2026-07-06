@@ -1,20 +1,18 @@
-using System;
 using UnityEngine;
 using UnityEngine.AI;
 
 public class EnemyScript : MonoBehaviour
 {
+    public AudioSource audioSourceDeath;
     GameObject player;
     NavMeshAgent agent;
     Rigidbody rb;
-    AudioSource audiosource;
     public AudioClip[] deathSounds;
     void Start()
     {
         player = FindAnyObjectByType<PlayerController>().gameObject;
         agent = GetComponent<NavMeshAgent>();
         rb = GetComponent<Rigidbody>();
-        audiosource = GetComponent<AudioSource>();
         SettingsManager.SettingsChangedEvent.AddListener(ReloadSettings);
         ReloadSettings();
     }
@@ -26,7 +24,7 @@ public class EnemyScript : MonoBehaviour
 
     void ReloadSettings()
     {
-        audiosource.volume = SettingsManager.SoundVolume;
+        audioSourceDeath.volume = SettingsManager.SoundVolume;
     }
 
     void Update()
@@ -46,7 +44,7 @@ public class EnemyScript : MonoBehaviour
             cool.y = 30;
             rb.linearVelocity = cool;
             // </insert animation here>
-            SoundPlayer.PlayRandomSound(audiosource, deathSounds);
+            audioSourceDeath.Play();
             Destroy(gameObject, 2f); // 2f er standin for animation.
         }
     }
