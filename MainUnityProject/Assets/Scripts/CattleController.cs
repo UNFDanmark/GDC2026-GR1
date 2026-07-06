@@ -34,11 +34,10 @@ public class CattleController : MonoBehaviour
         float rawMoveInput = actionMovement.ReadValue<float>();
         targetVelocity = rawMoveInput * moveSpeed;
         velocity += (targetVelocity - velocity) * Time.deltaTime;
-        print(velocity);
-        rb.linearVelocity = velocity * Time.deltaTime * transform.forward;
+        rb.linearVelocity = velocity * transform.forward;
 
         float rawRotateInput = actionRotate.ReadValue<float>();
-        transform.Rotate(0,rawRotateInput * rotateSpeed * Time.deltaTime,0);
+        transform.Rotate(0,rawRotateInput * rotateSpeed * Time.deltaTime,0, Space.World);
         //targetZRotation -= (rawRotateInput * cosmeticRotateFactor + targetZRotation) * 3 * Time.deltaTime;
     }
 }

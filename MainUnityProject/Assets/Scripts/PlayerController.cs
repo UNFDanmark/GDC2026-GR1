@@ -27,6 +27,11 @@ public class PlayerController : MonoBehaviour
     public AudioSource audioSourceDash;
     bool canDash = true;
     
+    [Header("Slide")]
+    public InputActionReference actionSlide;
+    public float slideSpeed, slideThreshold, slideCooldown, slideHeight;
+    bool dashing;
+    
     [Header("Camera")]
     public InputActionReference actionLook;       // vector2
     public GameObject cameraGameObject;
@@ -53,6 +58,9 @@ public class PlayerController : MonoBehaviour
         actionJump.action.started += Jump;
         actionDash.action.Enable();
         actionDash.action.started += Dash;
+        actionSlide.action.Enable();
+        actionSlide.action.started += Slide;
+        actionSlide.action.canceled += UnSlide;
         actionAttack.action.Enable();
         actionAttack.action.started += Attack;
         Cursor.lockState = CursorLockMode.Locked;
@@ -78,6 +86,9 @@ public class PlayerController : MonoBehaviour
         actionJump.action.started -= Jump;
         actionDash.action.Disable();
         actionDash.action.started -= Dash;
+        actionSlide.action.Disable();
+        actionSlide.action.started -= Slide;
+        actionSlide.action.canceled -= UnSlide;
         actionAttack.action.Disable();
         actionAttack.action.started -= Attack;
         Cursor.lockState = CursorLockMode.None;
@@ -88,18 +99,17 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
         if (Time.timeScale == 0) return;
-        if (canMove)
-        {
-            Vector2 rawLookInput = actionLook.action.ReadValue<Vector2>();
-            Vector3 look = new Vector3(rawLookInput.y * -cameraSensY, 0, 0);
-            cameraGameObject.transform.Rotate(look);
-            rb.transform.Rotate(Vector3.up, rawLookInput.x * cameraSensX);
-
+        Vector2 rawLookInput = actionLook.action.ReadValue<Vector2>();
+        Vector3 look = new Vector3(rawLookInput.y * -cameraSensY, 0, 0);
+        cameraGameObject.transform.Rotate(look);
+        rb.transform.Rotate(Vector3.up, rawLookInput.x * cameraSensX);
+        if (canMove) {
             Vector2 rawMoveInput = actionMovement.action.ReadValue<Vector2>();
             Vector3 move = new Vector3(rawMoveInput.x, 0, rawMoveInput.y);
             move *= moveSpeed * rb.linearDamping * Time.deltaTime;
             rb.AddRelativeForce(move);
         }
+        if(rb.linearVelocity.magnitude > 4) audioSourceMove.Play();
     }
 
     void Jump(InputAction.CallbackContext context)
@@ -112,18 +122,48 @@ public class PlayerController : MonoBehaviour
         if (real) return;
         Vector3 jump = new Vector3(0, jumpForce * rb.linearDamping, 0);
         rb.AddRelativeForce(jump);
+        audioSourceJump.Play();
     }
 
     void Dash(InputAction.CallbackContext context)
     {
         if (!canDash) return;
-        StartCoroutine(disableMovement());
+        StartCoroutine(disableMovement(dashDisablesMovementFor, dashCooldown));
         StartCoroutine(lerpCamera());
         Vector2 rawMoveInput = actionMovement.action.ReadValue<Vector2>();
         Vector3 move = new Vector3(rawMoveInput.x, 0, rawMoveInput.y);
         move *= dashSpeed * rb.linearDamping;
         rb.linearVelocity = Vector3.zero;
         rb.AddRelativeForce(move, ForceMode.Impulse);
+        audioSourceDash.Play();
+    }
+
+    void Slide(InputAction.CallbackContext context)
+    {
+        if (!canDash) return;
+        if (rb.linearVelocity.magnitude < slideThreshold) return;
+        dashing = true;
+        canMove = false;
+        canDash = false;
+        
+        Vector3 uhh = cameraGameObject.transform.position;
+        uhh.y -= 0.5f;
+        cameraGameObject.transform.position = uhh;
+        Vector2 rawMoveInput = actionMovement.action.ReadValue<Vector2>();
+        Vector3 move = new Vector3(rawMoveInput.x, slideHeight, rawMoveInput.y);
+        move *= slideSpeed * rb.linearDamping;
+        rb.AddRelativeForce(move, ForceMode.Impulse);
+    }
+
+    void UnSlide(InputAction.CallbackContext context)
+    {
+        if (!dashing) return;
+        dashing = false;
+        canMove = true;
+        StartCoroutine(disableMovement(0, slideCooldown));
+        Vector3 uhh = cameraGameObject.transform.position;
+        uhh.y += 0.5f;
+        cameraGameObject.transform.position = uhh;
     }
 
 
@@ -133,6 +173,7 @@ public class PlayerController : MonoBehaviour
         StartCoroutine(disableAttack());
         animator.SetTrigger("attack");
         GameObject tmpAttackBox = Instantiate(attackBox, transform);
+        audioSourceAttack.Play();
         Destroy(tmpAttackBox, attackLifetime);
     }
 
@@ -142,18 +183,18 @@ public class PlayerController : MonoBehaviour
         yield return new WaitForSecondsRealtime(attackCooldown);
         canAttack = true;
     }
-    IEnumerator disableMovement()
+    IEnumerator disableMovement(float disableTime, float cooldown)
     {
         //Før/under dash
         canMove = false;
         canDash = false;
         rb.linearDamping /= 2;
-        yield return new WaitForSecondsRealtime(dashDisablesMovementFor);
+        yield return new WaitForSecondsRealtime(disableTime);
         //Efter dash
         canMove = true;
         rb.linearDamping *= 2;
         //Cooldown
-        yield return new WaitForSecondsRealtime(dashCooldown);
+        yield return new WaitForSecondsRealtime(cooldown);
         canDash = true;
     }
 

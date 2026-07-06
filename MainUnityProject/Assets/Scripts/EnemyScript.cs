@@ -7,7 +7,6 @@ public class EnemyScript : MonoBehaviour
     GameObject player;
     NavMeshAgent agent;
     Rigidbody rb;
-    public AudioClip[] deathSounds;
     void Start()
     {
         player = FindAnyObjectByType<PlayerController>().gameObject;

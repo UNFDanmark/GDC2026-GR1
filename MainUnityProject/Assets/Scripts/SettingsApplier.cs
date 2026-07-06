@@ -34,7 +34,10 @@ public class SettingsApplier : MonoBehaviour
         CameraSensXSlider.onValueChanged.RemoveListener(delegate { ApplySettings();});
         CameraSensYSlider.onValueChanged.RemoveListener(delegate { ApplySettings();});
         MusicVolumeSlider.onValueChanged.RemoveListener(delegate { ApplySettings();});
-        SoundVolumeSlider.onValueChanged.RemoveListener(delegate { ApplySettings();});    }
+        SoundVolumeSlider.onValueChanged.RemoveListener(delegate { ApplySettings();});
+        actionPause.action.Disable();
+        actionPause.action.started -= PauseToggle;
+    }
 
     void ApplySettings()
     {
