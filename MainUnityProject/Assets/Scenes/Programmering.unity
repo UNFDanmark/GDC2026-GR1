@@ -839,7 +839,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1434053909}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 172515602e62fb746b5d573b38a5fe58, type: 3}
   m_Name: 
@@ -1145,13 +1145,14 @@ MonoBehaviour:
   actionDash: {fileID: -7471211009204490832, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   dashSpeed: 48
   dashDisablesMovementFor: 0.06
-  dashCooldown: 2
+  dashCooldown: 1
+  motionBlurVolume: {fileID: 1434053910}
   actionLook: {fileID: -5630151704836100654, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   cameraGameObject: {fileID: 330585543}
   actionAttack: {fileID: 1120369429361536294, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   attackBox: {fileID: 1251903067814607390, guid: 1c5691b72d8431d42afa78ed7dffd201, type: 3}
   attackLifetime: 0.2
-  attackCooldown: 0.5
+  attackCooldown: 0.3
 --- !u!54 &2120864489
 Rigidbody:
   m_ObjectHideFlags: 0

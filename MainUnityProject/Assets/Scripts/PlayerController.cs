@@ -84,6 +84,7 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
+        if (Time.timeScale == 0) return;
         if (canMove)
         {
             Vector2 rawLookInput = actionLook.action.ReadValue<Vector2>();
