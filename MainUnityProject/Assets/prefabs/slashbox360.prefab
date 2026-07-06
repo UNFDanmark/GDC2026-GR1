@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 274322021880320833}
   m_Layer: 0
   m_Name: slashbox360
-  m_TagString: Untagged
+  m_TagString: PlayerHit
   m_Icon: {fileID: -5442936267250999957, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -51,5 +51,5 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 2, y: 2, z: 3}
+  m_Size: {x: 3, y: 2, z: 4}
   m_Center: {x: 0, y: 0, z: 0}

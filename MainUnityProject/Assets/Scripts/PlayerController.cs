@@ -1,30 +1,51 @@
-using System;
 using System.Collections;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Rendering;
 
 public class PlayerController : MonoBehaviour
 {
+    Animator animator;
+    
+    [Header("Movement")]
     public InputActionReference actionMovement;   // vector2
-    public InputActionReference actionDash;       // button
     public InputActionReference actionJump;       // button
-    public InputActionReference actionAttack;     // button
-    public InputActionReference actionLook;       // vector2
     public float moveSpeed = 10f;
-    public float cameraSensX = 0.5f;
-    public float cameraSensY = 0.5f;
     public float jumpForce = 10f;
+    public AudioSource audioSourceMove;
+    public AudioSource audioSourceJump;
+    Rigidbody rb;
+    bool canMove = true;
+    
+    [Header("Dash")]
+    public InputActionReference actionDash;       // button
     public float dashSpeed = 10f;
     public float dashDisablesMovementFor = 0.5f;
     public float dashCooldown = 2f;
+    public Volume motionBlurVolume;
+    public AudioSource audioSourceDash;
+    bool canDash = true;
+    
+    [Header("Slide")]
+    public InputActionReference actionSlide;
+    public float slideSpeed, slideThreshold, slideCooldown, slideHeight;
+    bool dashing;
+    
+    [Header("Camera")]
+    public InputActionReference actionLook;       // vector2
     public GameObject cameraGameObject;
-    Rigidbody rb;
+    float cameraSensX = 0.5f;
+    float cameraSensY = 0.5f;
     Camera camera;
-    bool canMove = true, canDash = true;
-
-    public GameObject slashbox360;
-    public float slashboxLifetime = 9999f;
+    
+    [Header("Attack")]
+    public InputActionReference actionAttack;     // button
+    public GameObject attackBox;
+    public float attackLifetime = 0.2f;
+    public float attackCooldown = 0.5f;
+    public AudioSource audioSourceAttack;
+    bool canAttack = true;
     
     
     void Start()
@@ -37,10 +58,26 @@ public class PlayerController : MonoBehaviour
         actionJump.action.started += Jump;
         actionDash.action.Enable();
         actionDash.action.started += Dash;
+        actionSlide.action.Enable();
+        actionSlide.action.started += Slide;
+        actionSlide.action.canceled += UnSlide;
         actionAttack.action.Enable();
         actionAttack.action.started += Attack;
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+        animator = GetComponent<Animator>();
+        SettingsManager.SettingsChangedEvent.AddListener(ReloadSettings);
+        ReloadSettings();
     }
-
+    void ReloadSettings()
+    {
+        audioSourceMove.volume = SettingsManager.SoundVolume;
+        audioSourceJump.volume = SettingsManager.SoundVolume;
+        audioSourceDash.volume = SettingsManager.SoundVolume;
+        audioSourceAttack.volume = SettingsManager.SoundVolume;
+        cameraSensX = SettingsManager.CameraSensX;
+        cameraSensY = SettingsManager.CameraSensY;
+    }
     void OnDisable()
     {
         actionMovement.action.Disable();
@@ -49,24 +86,30 @@ public class PlayerController : MonoBehaviour
         actionJump.action.started -= Jump;
         actionDash.action.Disable();
         actionDash.action.started -= Dash;
+        actionSlide.action.Disable();
+        actionSlide.action.started -= Slide;
+        actionSlide.action.canceled -= UnSlide;
         actionAttack.action.Disable();
         actionAttack.action.started -= Attack;
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+        SettingsManager.SettingsChangedEvent.RemoveListener(ReloadSettings);
     }
 
     void Update()
     {
-        if (canMove)
-        {
-            Vector2 rawLookInput = actionLook.action.ReadValue<Vector2>();
-            Vector3 look = new Vector3(rawLookInput.y * cameraSensY, 0, 0);
-            cameraGameObject.transform.Rotate(look);
-            rb.transform.Rotate(Vector3.up, rawLookInput.x * cameraSensX);
-
+        if (Time.timeScale == 0) return;
+        Vector2 rawLookInput = actionLook.action.ReadValue<Vector2>();
+        Vector3 look = new Vector3(rawLookInput.y * -cameraSensY, 0, 0);
+        cameraGameObject.transform.Rotate(look);
+        rb.transform.Rotate(Vector3.up, rawLookInput.x * cameraSensX);
+        if (canMove) {
             Vector2 rawMoveInput = actionMovement.action.ReadValue<Vector2>();
             Vector3 move = new Vector3(rawMoveInput.x, 0, rawMoveInput.y);
             move *= moveSpeed * rb.linearDamping * Time.deltaTime;
             rb.AddRelativeForce(move);
         }
+        if(rb.linearVelocity.magnitude > 4) audioSourceMove.Play();
     }
 
     void Jump(InputAction.CallbackContext context)
@@ -79,44 +122,85 @@ public class PlayerController : MonoBehaviour
         if (real) return;
         Vector3 jump = new Vector3(0, jumpForce * rb.linearDamping, 0);
         rb.AddRelativeForce(jump);
+        audioSourceJump.Play();
     }
 
     void Dash(InputAction.CallbackContext context)
     {
         if (!canDash) return;
-        StartCoroutine(disableMovement());
+        StartCoroutine(disableMovement(dashDisablesMovementFor, dashCooldown));
         StartCoroutine(lerpCamera());
         Vector2 rawMoveInput = actionMovement.action.ReadValue<Vector2>();
         Vector3 move = new Vector3(rawMoveInput.x, 0, rawMoveInput.y);
         move *= dashSpeed * rb.linearDamping;
         rb.linearVelocity = Vector3.zero;
         rb.AddRelativeForce(move, ForceMode.Impulse);
+        audioSourceDash.Play();
+    }
+
+    void Slide(InputAction.CallbackContext context)
+    {
+        if (!canDash) return;
+        if (rb.linearVelocity.magnitude < slideThreshold) return;
+        dashing = true;
+        canMove = false;
+        canDash = false;
+        
+        Vector3 uhh = cameraGameObject.transform.position;
+        uhh.y -= 0.5f;
+        cameraGameObject.transform.position = uhh;
+        Vector2 rawMoveInput = actionMovement.action.ReadValue<Vector2>();
+        Vector3 move = new Vector3(rawMoveInput.x, slideHeight, rawMoveInput.y);
+        move *= slideSpeed * rb.linearDamping;
+        rb.AddRelativeForce(move, ForceMode.Impulse);
+    }
+
+    void UnSlide(InputAction.CallbackContext context)
+    {
+        if (!dashing) return;
+        dashing = false;
+        canMove = true;
+        StartCoroutine(disableMovement(0, slideCooldown));
+        Vector3 uhh = cameraGameObject.transform.position;
+        uhh.y += 0.5f;
+        cameraGameObject.transform.position = uhh;
     }
 
 
     void Attack(InputAction.CallbackContext context)
     {
-        GameObject slashboxtemp = Instantiate(slashbox360, transform);
-        Destroy(slashboxtemp, slashboxLifetime);
+        if (!canAttack) return;
+        StartCoroutine(disableAttack());
+        animator.SetTrigger("attack");
+        GameObject tmpAttackBox = Instantiate(attackBox, transform);
+        audioSourceAttack.Play();
+        Destroy(tmpAttackBox, attackLifetime);
     }
 
-    IEnumerator disableMovement()
+    IEnumerator disableAttack()
+    {
+        canAttack = false;
+        yield return new WaitForSecondsRealtime(attackCooldown);
+        canAttack = true;
+    }
+    IEnumerator disableMovement(float disableTime, float cooldown)
     {
         //Før/under dash
         canMove = false;
         canDash = false;
         rb.linearDamping /= 2;
-        yield return new WaitForSecondsRealtime(dashDisablesMovementFor);
+        yield return new WaitForSecondsRealtime(disableTime);
         //Efter dash
         canMove = true;
         rb.linearDamping *= 2;
         //Cooldown
-        yield return new WaitForSecondsRealtime(dashCooldown);
+        yield return new WaitForSecondsRealtime(cooldown);
         canDash = true;
     }
 
     IEnumerator lerpCamera()
     {
+        motionBlurVolume.enabled = true;
         for (float t = 0; t <= 1; t += 10 * Time.deltaTime)
         {
             camera.fieldOfView = math.lerp(80f, 50f, t);
@@ -129,5 +213,6 @@ public class PlayerController : MonoBehaviour
         }
 
         camera.fieldOfView = 80f;
+        motionBlurVolume.enabled = false;
     }
 }
