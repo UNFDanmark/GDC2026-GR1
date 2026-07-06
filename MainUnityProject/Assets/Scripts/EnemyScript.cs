@@ -15,18 +15,18 @@ public class EnemyScript : MonoBehaviour
         agent = GetComponent<NavMeshAgent>();
         rb = GetComponent<Rigidbody>();
         audiosource = GetComponent<AudioSource>();
-        SettingsManager.Instance.settingsChangedEvent.AddListener(ReloadSettings);
+        SettingsManager.SettingsChangedEvent.AddListener(ReloadSettings);
         ReloadSettings();
     }
 
     void OnDisable()
     {
-        SettingsManager.Instance.settingsChangedEvent.RemoveListener(ReloadSettings);
+        SettingsManager.SettingsChangedEvent.RemoveListener(ReloadSettings);
     }
 
     void ReloadSettings()
     {
-        audiosource.volume = SettingsManager.Instance.soundVolume;
+        audiosource.volume = SettingsManager.SoundVolume;
     }
 
     void Update()

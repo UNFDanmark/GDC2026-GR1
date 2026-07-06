@@ -56,14 +56,14 @@ public class PlayerController : MonoBehaviour
         Cursor.visible = false;
         animator = GetComponent<Animator>();
         audiosource = GetComponent<AudioSource>();
-        SettingsManager.Instance.settingsChangedEvent.AddListener(ReloadSettings);
+        SettingsManager.SettingsChangedEvent.AddListener(ReloadSettings);
         ReloadSettings();
     }
     void ReloadSettings()
     {
-        audiosource.volume = SettingsManager.Instance.soundVolume;
-        cameraSensX = SettingsManager.Instance.cameraSensX;
-        cameraSensY = SettingsManager.Instance.cameraSensY;
+        audiosource.volume = SettingsManager.SoundVolume;
+        cameraSensX = SettingsManager.CameraSensX;
+        cameraSensY = SettingsManager.CameraSensY;
     }
     void OnDisable()
     {
@@ -77,7 +77,7 @@ public class PlayerController : MonoBehaviour
         actionAttack.action.started -= Attack;
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
-        SettingsManager.Instance.settingsChangedEvent.RemoveListener(ReloadSettings);
+        SettingsManager.SettingsChangedEvent.RemoveListener(ReloadSettings);
     }
 
     void Update()

@@ -2,40 +2,30 @@ using System;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class SettingsManager : MonoBehaviour
+public class SettingsManager
 {
-    [HideInInspector] public static SettingsManager Instance;
-    [HideInInspector] public float cameraSensX, cameraSensY, musicVolume, soundVolume;
+    [HideInInspector] public static float CameraSensX, CameraSensY, MusicVolume, SoundVolume;
 
-    public UnityEvent settingsChangedEvent;
-    void Awake()
+    public static UnityEvent SettingsChangedEvent;
+
+    void Start()
     {
-        if (Instance != null) Destroy(gameObject);
-        Instance = this;
-        PermaLoad();
-        settingsChangedEvent.AddListener(SaveSettings);
-        DontDestroyOnLoad(gameObject);
+        
+    }
+    
+    public static void SaveSettings()
+    {
+        PlayerPrefs.SetFloat("musicVolume", MusicVolume);
+        PlayerPrefs.SetFloat("soundVolume", SoundVolume);
+        PlayerPrefs.SetFloat("cameraSensX", CameraSensX);
+        PlayerPrefs.SetFloat("cameraSensY", CameraSensY);
     }
 
-    void OnDisable()
+    public static void PermaLoad()
     {
-        if (Instance != this) return;
-        settingsChangedEvent.RemoveAllListeners();
-    }
-
-    void SaveSettings()
-    {
-        PlayerPrefs.SetFloat("musicVolume", musicVolume);
-        PlayerPrefs.SetFloat("soundVolume", soundVolume);
-        PlayerPrefs.SetFloat("cameraSensX", cameraSensX);
-        PlayerPrefs.SetFloat("cameraSensY", cameraSensY);
-    }
-
-    void PermaLoad()
-    {
-        musicVolume = PlayerPrefs.GetFloat("musicVolume", 0.5f);
-        soundVolume = PlayerPrefs.GetFloat("soundVolume", 0.5f);
-        cameraSensX = PlayerPrefs.GetFloat("cameraSensX", 0.25f);
-        cameraSensY = PlayerPrefs.GetFloat("cameraSensY", 0.15f);
+        MusicVolume = PlayerPrefs.GetFloat("musicVolume", 0.5f);
+        SoundVolume = PlayerPrefs.GetFloat("soundVolume", 0.5f);
+        CameraSensX = PlayerPrefs.GetFloat("cameraSensX", 0.25f);
+        CameraSensY = PlayerPrefs.GetFloat("cameraSensY", 0.15f);
     }
 }
