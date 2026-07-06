@@ -2,16 +2,11 @@ using System;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class SettingsManager
+public static class SettingsManager
 {
-    [HideInInspector] public static float CameraSensX, CameraSensY, MusicVolume, SoundVolume;
+    [HideInInspector] public static float CameraSensX = 0.25f, CameraSensY = 0.15f, MusicVolume = 0.5f, SoundVolume = 0.5f;
 
-    public static UnityEvent SettingsChangedEvent;
-
-    void Start()
-    {
-        
-    }
+    public static UnityEvent SettingsChangedEvent = new UnityEvent();
     
     public static void SaveSettings()
     {

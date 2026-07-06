@@ -3,6 +3,7 @@ using System.Collections;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Rendering;
 using UnityEngine.Serialization;
 
 public class PlayerController : MonoBehaviour
@@ -24,6 +25,7 @@ public class PlayerController : MonoBehaviour
     public float dashDisablesMovementFor = 0.5f;
     public float dashCooldown = 2f;
     bool canDash = true;
+    public Volume motionBlurVolume;
     
     [Header("Camera")]
     public InputActionReference actionLook;       // vector2
@@ -153,6 +155,7 @@ public class PlayerController : MonoBehaviour
 
     IEnumerator lerpCamera()
     {
+        motionBlurVolume.enabled = true;
         for (float t = 0; t <= 1; t += 10 * Time.deltaTime)
         {
             camera.fieldOfView = math.lerp(80f, 50f, t);
@@ -165,5 +168,6 @@ public class PlayerController : MonoBehaviour
         }
 
         camera.fieldOfView = 80f;
+        motionBlurVolume.enabled = false;
     }
 }
