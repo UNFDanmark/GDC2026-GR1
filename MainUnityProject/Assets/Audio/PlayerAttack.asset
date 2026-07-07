@@ -1,13 +1,33 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1233149941 &-8397527850842232788
+--- !u!1233149941 &-5497370460497699704
 AudioContainerElement:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: slash1_{-8397527850842232788}
-  m_AudioClip: {fileID: 8300000, guid: 94ac1a78f0a006d41b94499208ec24b5, type: 3}
+  m_Name: slash4_{-5497370460497699704}
+  m_AudioClip: {fileID: 8300000, guid: b20c9c1ab5c5f154e8e8dbc00f7fc1cb, type: 3}
+  m_Volume: 0
+  m_Enabled: 1
+--- !u!1233149941 &-4515916218334536424
+AudioContainerElement:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: slash1_{-4515916218334536424}
+  m_AudioClip: {fileID: 8300000, guid: 685a1c2e79bfda74fa9c5110d75d0196, type: 3}
+  m_Volume: 0
+  m_Enabled: 1
+--- !u!1233149941 &-1914350750126441852
+AudioContainerElement:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: slash6_{-1914350750126441852}
+  m_AudioClip: {fileID: 8300000, guid: 11de965dc46247743ae9972cbf371442, type: 3}
   m_Volume: 0
   m_Enabled: 1
 --- !u!1307931743 &6418180475301049370
@@ -26,7 +46,12 @@ AudioRandomContainer:
   m_AutomaticTriggerTimeRandomizationRange: {x: 0, y: 0}
   m_LoopCountRandomizationRange: {x: 0, y: 0}
   m_Elements:
-  - {fileID: -8397527850842232788}
+  - {fileID: -4515916218334536424}
+  - {fileID: 7631445148005312398}
+  - {fileID: 6462537602406690161}
+  - {fileID: -5497370460497699704}
+  - {fileID: 9124026610612319778}
+  - {fileID: -1914350750126441852}
   m_AvoidRepeatingLast: 0
   m_PlaybackMode: 2
   m_TriggerMode: 1
@@ -36,3 +61,33 @@ AudioRandomContainer:
   m_PitchRandomizationEnabled: 1
   m_AutomaticTriggerTimeRandomizationEnabled: 0
   m_LoopCountRandomizationEnabled: 0
+--- !u!1233149941 &6462537602406690161
+AudioContainerElement:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: slash3_{6462537602406690161}
+  m_AudioClip: {fileID: 8300000, guid: f373f4eba2037fe48975ab99ed9bbae1, type: 3}
+  m_Volume: 0
+  m_Enabled: 1
+--- !u!1233149941 &7631445148005312398
+AudioContainerElement:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: slash2_{7631445148005312398}
+  m_AudioClip: {fileID: 8300000, guid: fcebfe085380c4148882df59e2cc05de, type: 3}
+  m_Volume: 0
+  m_Enabled: 1
+--- !u!1233149941 &9124026610612319778
+AudioContainerElement:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: slash5_{9124026610612319778}
+  m_AudioClip: {fileID: 8300000, guid: 47b4f61426b23be40bc0158292d1829e, type: 3}
+  m_Volume: 0
+  m_Enabled: 1
