@@ -44,14 +44,10 @@ public class PlayerController : MonoBehaviour
     Camera camera;
     
     [Header("Attack")]
-    public InputActionReference actionAttack;     // button
     public GameObject attackBox;
     public float attackLifetime = 0.2f;
-    public float attackCooldown = 0.5f;
     public AudioSource audioSourceAttack;
     public AudioSource audioSourceDeath;
-    bool canAttack = true;
-
 
     [Header("Deathscreen")]
     public Canvas Deathscreen; 
@@ -71,8 +67,6 @@ public class PlayerController : MonoBehaviour
         actionSlide.action.Enable();
         actionSlide.action.started += Slide;
         actionSlide.action.canceled += UnSlide;
-        actionAttack.action.Enable();
-        actionAttack.action.started += Attack;
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
         animator = GetComponent<Animator>();
@@ -99,8 +93,6 @@ public class PlayerController : MonoBehaviour
         actionSlide.action.Disable();
         actionSlide.action.started -= Slide;
         actionSlide.action.canceled -= UnSlide;
-        actionAttack.action.Disable();
-        actionAttack.action.started -= Attack;
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
         SettingsManager.SettingsChangedEvent.RemoveListener(ReloadSettings);
@@ -153,7 +145,11 @@ public class PlayerController : MonoBehaviour
         move *= dashSpeed * rb.linearDamping;
         rb.linearVelocity = Vector3.zero;
         rb.AddRelativeForce(move, ForceMode.Impulse);
-        //Time.timeScale = 0.8f; //fucking around 
+        
+        animator.SetTrigger("attack");
+        GameObject tmpAttackBox = Instantiate(attackBox, transform);
+        audioSourceAttack.Play();
+        Destroy(tmpAttackBox, attackLifetime);
         audioSourceDash.Play();
     }
 
@@ -180,24 +176,7 @@ public class PlayerController : MonoBehaviour
         StartCoroutine(disableMovement(0, slideCooldown));
         animator.SetTrigger("uncrouching");
     }
-
-
-    void Attack(InputAction.CallbackContext context)
-    {
-        if (!canAttack) return;
-        StartCoroutine(disableAttack());
-        animator.SetTrigger("attack");
-        GameObject tmpAttackBox = Instantiate(attackBox, transform);
-        audioSourceAttack.Play();
-        Destroy(tmpAttackBox, attackLifetime);
-    }
-
-    IEnumerator disableAttack()
-    {
-        canAttack = false;
-        yield return new WaitForSecondsRealtime(attackCooldown);
-        canAttack = true;
-    }
+    
     IEnumerator disableMovement(float disableTime, float cooldown)
     {
         //Før/under dash
@@ -221,13 +200,13 @@ public class PlayerController : MonoBehaviour
         for (float t = 0; t <= 1; t += 10 * Time.deltaTime)
         {
             camera.fieldOfView = math.lerp(80f, 50f, t);
-            Time.timeScale = math.lerp(1f, 0.5f, t);
+            //Time.timeScale = math.lerp(1f, 0.5f, t);
             yield return 1;
         }
         for (float t = 0; t <= 1; t += 2 * Time.deltaTime)
         {
             camera.fieldOfView = math.lerp(50f, 80f, t);
-            Time.timeScale = math.lerp(0.5f, 1f, t);
+            //Time.timeScale = math.lerp(0.5f, 1f, t);
             yield return 1;
         }
 
@@ -243,7 +222,6 @@ public class PlayerController : MonoBehaviour
         {
             canDash = false;
             canMove = false;
-            canAttack = false;
             Deathscreen.gameObject.SetActive(true);
             Time.timeScale = 0f;
             SettingsApplier.canPause = false;
