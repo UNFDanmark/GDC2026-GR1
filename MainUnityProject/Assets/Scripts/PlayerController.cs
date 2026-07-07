@@ -47,6 +47,7 @@ public class PlayerController : MonoBehaviour
     public float attackLifetime = 0.2f;
     public float attackCooldown = 0.5f;
     public AudioSource audioSourceAttack;
+    public AudioSource audioSourceDeath;
     bool canAttack = true;
 
 
@@ -116,7 +117,7 @@ public class PlayerController : MonoBehaviour
             move *= moveSpeed * rb.linearDamping * Time.deltaTime;
             rb.AddRelativeForce(move);
         }
-        if(rb.linearVelocity.magnitude > 4) audioSourceMove.Play();
+        if(!audioSourceMove.isPlaying && rb.linearVelocity.magnitude > 4) audioSourceMove.Play();
     }
 
     void Jump(InputAction.CallbackContext context)
@@ -231,11 +232,15 @@ public class PlayerController : MonoBehaviour
         if (invulnerable) return;
         if (other.gameObject.CompareTag("Enemy"))
         {
+            canDash = false;
+            canMove = false;
+            canAttack = false;
             Deathscreen.gameObject.SetActive(true);
             Time.timeScale = 0f;
             SettingsApplier.canPause = false;
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
+            audioSourceDeath.Play();
         }
     }
 }
