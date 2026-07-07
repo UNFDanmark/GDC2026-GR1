@@ -155,11 +155,11 @@ public class PlayerController : MonoBehaviour
 
     void Slide(InputAction.CallbackContext context)
     {
-        if (!canDash) return;
+        if (!canDash || dashing) return;
         if (rb.linearVelocity.magnitude < slideThreshold) return;
         dashing = true;
-        canMove = false;
         canDash = false;
+        moveSpeed /= 5;
         
         animator.SetTrigger("crouching");
         Vector2 rawMoveInput = actionMovement.action.ReadValue<Vector2>();
@@ -171,8 +171,22 @@ public class PlayerController : MonoBehaviour
     void UnSlide(InputAction.CallbackContext context)
     {
         if (!dashing) return;
+        StartCoroutine(UnSlideI());
+    }
+
+    IEnumerator UnSlideI()
+    {
+        for (bool real = true; real;)
+        {
+            real = false;
+            RaycastHit[] hi = Physics.RaycastAll(transform.position, Vector3.up, 1f);
+            foreach (RaycastHit bye in hi)
+                if (bye.collider.gameObject.tag == "Ground")
+                    real = true;
+            yield return new WaitForNextFrameUnit();
+        }
+        moveSpeed *= 5;
         dashing = false;
-        canMove = true;
         StartCoroutine(disableMovement(0, slideCooldown));
         animator.SetTrigger("uncrouching");
     }
