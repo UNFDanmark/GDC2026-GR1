@@ -29,7 +29,7 @@ public class SettingsApplier : MonoBehaviour
         MusicVolumeSlider.onValueChanged.AddListener(delegate { ApplySettings();});
         SoundVolumeSlider.onValueChanged.AddListener(delegate { ApplySettings();});
         actionPause.action.Enable();
-        actionPause.action.started += PauseToggle;
+        actionPause.action.started += PauseHandler;
     }
 
     void OnDisable()
@@ -39,7 +39,7 @@ public class SettingsApplier : MonoBehaviour
         MusicVolumeSlider.onValueChanged.RemoveListener(delegate { ApplySettings();});
         SoundVolumeSlider.onValueChanged.RemoveListener(delegate { ApplySettings();});
         actionPause.action.Disable();
-        actionPause.action.started -= PauseToggle;
+        actionPause.action.started -= PauseHandler;
     }
 
     void ApplySettings()
@@ -52,7 +52,12 @@ public class SettingsApplier : MonoBehaviour
         SettingsManager.SaveSettings();
     }
 
-    void PauseToggle(InputAction.CallbackContext context)
+    void PauseHandler(InputAction.CallbackContext context)
+    {
+        PauseToggle();
+    }
+    
+    void PauseToggle()
     {
         if (!canPause) return;
         if (paused)
