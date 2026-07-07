@@ -8,11 +8,14 @@ public class SettingsApplier : MonoBehaviour
     public Canvas pauseMenuCanvas;
     public Slider CameraSensXSlider, CameraSensYSlider, MusicVolumeSlider, SoundVolumeSlider;
 
-    bool paused;
+    static bool paused;
+    public static bool canPause = true;
     
     void Awake()
     {
         SettingsManager.PermaLoad();
+        paused = false;
+        canPause = true;
     }
 
     void Start()
@@ -51,6 +54,7 @@ public class SettingsApplier : MonoBehaviour
 
     void PauseToggle(InputAction.CallbackContext context)
     {
+        if (!canPause) return;
         if (paused)
         {
             pauseMenuCanvas.enabled = false;

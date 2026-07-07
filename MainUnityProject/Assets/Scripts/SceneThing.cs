@@ -7,4 +7,10 @@ public class SceneThing : MonoBehaviour
     {
         SceneManager.LoadScene(buildIndex);
     }
+
+    public void ReloadScene()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        Time.timeScale = 1f;
+    }
 }

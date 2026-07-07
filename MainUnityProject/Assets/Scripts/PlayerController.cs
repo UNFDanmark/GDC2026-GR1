@@ -1,5 +1,6 @@
 using System.Collections;
 using Unity.Mathematics;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Rendering;
@@ -26,6 +27,7 @@ public class PlayerController : MonoBehaviour
     public Volume motionBlurVolume;
     public AudioSource audioSourceDash;
     bool canDash = true;
+    bool invulnerable = false;
     
     [Header("Slide")]
     public InputActionReference actionSlide;
@@ -46,7 +48,12 @@ public class PlayerController : MonoBehaviour
     public float attackCooldown = 0.5f;
     public AudioSource audioSourceAttack;
     bool canAttack = true;
-    
+
+
+    [Header("Deathscreen")]
+    public Canvas Deathscreen; 
+
+   
     
     void Start()
     {
@@ -189,8 +196,10 @@ public class PlayerController : MonoBehaviour
         canMove = false;
         canDash = false;
         rb.linearDamping /= 2;
+        invulnerable = true;
         yield return new WaitForSecondsRealtime(disableTime);
         //Efter dash
+        invulnerable = false;
         canMove = true;
         rb.linearDamping *= 2;
         //Cooldown
@@ -214,5 +223,19 @@ public class PlayerController : MonoBehaviour
 
         camera.fieldOfView = 80f;
         motionBlurVolume.enabled = false;
+    }
+    
+
+    void OnCollisionEnter(Collision other)
+    {
+        if (invulnerable) return;
+        if (other.gameObject.CompareTag("Enemy"))
+        {
+            Deathscreen.gameObject.SetActive(true);
+            Time.timeScale = 0f;
+            SettingsApplier.canPause = false;
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+        }
     }
 }
