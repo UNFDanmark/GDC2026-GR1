@@ -16,6 +16,8 @@ public class PlayerController : MonoBehaviour
     public float jumpForce = 10f;
     public AudioSource audioSourceMove;
     public AudioSource audioSourceJump;
+    public float audioCooldown = 0.5f;
+    float audioCooldownLeft;
     Rigidbody rb;
     bool canMove = true;
     
@@ -42,14 +44,10 @@ public class PlayerController : MonoBehaviour
     Camera camera;
     
     [Header("Attack")]
-    public InputActionReference actionAttack;     // button
     public GameObject attackBox;
     public float attackLifetime = 0.2f;
-    public float attackCooldown = 0.5f;
     public AudioSource audioSourceAttack;
     public AudioSource audioSourceDeath;
-    bool canAttack = true;
-
 
     [Header("Deathscreen")]
     public Canvas Deathscreen; 
@@ -69,8 +67,6 @@ public class PlayerController : MonoBehaviour
         actionSlide.action.Enable();
         actionSlide.action.started += Slide;
         actionSlide.action.canceled += UnSlide;
-        actionAttack.action.Enable();
-        actionAttack.action.started += Attack;
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
         animator = GetComponent<Animator>();
@@ -97,8 +93,6 @@ public class PlayerController : MonoBehaviour
         actionSlide.action.Disable();
         actionSlide.action.started -= Slide;
         actionSlide.action.canceled -= UnSlide;
-        actionAttack.action.Disable();
-        actionAttack.action.started -= Attack;
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
         SettingsManager.SettingsChangedEvent.RemoveListener(ReloadSettings);
@@ -117,7 +111,13 @@ public class PlayerController : MonoBehaviour
             move *= moveSpeed * rb.linearDamping * Time.deltaTime;
             rb.AddRelativeForce(move);
         }
-        if(!audioSourceMove.isPlaying && rb.linearVelocity.magnitude > 4) audioSourceMove.Play();
+
+        if (audioCooldownLeft <= 0 && rb.linearVelocity.magnitude > 4)
+        {
+            audioSourceMove.Play();
+            audioCooldownLeft = audioCooldown;
+        }   
+        audioCooldownLeft -= Time.deltaTime;
     }
 
     void Jump(InputAction.CallbackContext context)
@@ -136,13 +136,20 @@ public class PlayerController : MonoBehaviour
     void Dash(InputAction.CallbackContext context)
     {
         if (!canDash) return;
+        Vector2 rawMoveInput = actionMovement.action.ReadValue<Vector2>();
+        if (rawMoveInput == Vector2.zero) return;
         StartCoroutine(disableMovement(dashDisablesMovementFor, dashCooldown));
         StartCoroutine(lerpCamera());
-        Vector2 rawMoveInput = actionMovement.action.ReadValue<Vector2>();
+        
         Vector3 move = new Vector3(rawMoveInput.x, 0, rawMoveInput.y);
         move *= dashSpeed * rb.linearDamping;
         rb.linearVelocity = Vector3.zero;
         rb.AddRelativeForce(move, ForceMode.Impulse);
+        
+        animator.SetTrigger("attack");
+        GameObject tmpAttackBox = Instantiate(attackBox, transform);
+        audioSourceAttack.Play();
+        Destroy(tmpAttackBox, attackLifetime);
         audioSourceDash.Play();
     }
 
@@ -154,9 +161,7 @@ public class PlayerController : MonoBehaviour
         canMove = false;
         canDash = false;
         
-        Vector3 uhh = cameraGameObject.transform.position;
-        uhh.y -= 0.5f;
-        cameraGameObject.transform.position = uhh;
+        animator.SetTrigger("crouching");
         Vector2 rawMoveInput = actionMovement.action.ReadValue<Vector2>();
         Vector3 move = new Vector3(rawMoveInput.x, slideHeight, rawMoveInput.y);
         move *= slideSpeed * rb.linearDamping;
@@ -169,28 +174,9 @@ public class PlayerController : MonoBehaviour
         dashing = false;
         canMove = true;
         StartCoroutine(disableMovement(0, slideCooldown));
-        Vector3 uhh = cameraGameObject.transform.position;
-        uhh.y += 0.5f;
-        cameraGameObject.transform.position = uhh;
+        animator.SetTrigger("uncrouching");
     }
-
-
-    void Attack(InputAction.CallbackContext context)
-    {
-        if (!canAttack) return;
-        StartCoroutine(disableAttack());
-        animator.SetTrigger("attack");
-        GameObject tmpAttackBox = Instantiate(attackBox, transform);
-        audioSourceAttack.Play();
-        Destroy(tmpAttackBox, attackLifetime);
-    }
-
-    IEnumerator disableAttack()
-    {
-        canAttack = false;
-        yield return new WaitForSecondsRealtime(attackCooldown);
-        canAttack = true;
-    }
+    
     IEnumerator disableMovement(float disableTime, float cooldown)
     {
         //Før/under dash
@@ -214,11 +200,13 @@ public class PlayerController : MonoBehaviour
         for (float t = 0; t <= 1; t += 10 * Time.deltaTime)
         {
             camera.fieldOfView = math.lerp(80f, 50f, t);
+            //Time.timeScale = math.lerp(1f, 0.5f, t);
             yield return 1;
         }
         for (float t = 0; t <= 1; t += 2 * Time.deltaTime)
         {
             camera.fieldOfView = math.lerp(50f, 80f, t);
+            //Time.timeScale = math.lerp(0.5f, 1f, t);
             yield return 1;
         }
 
@@ -234,7 +222,6 @@ public class PlayerController : MonoBehaviour
         {
             canDash = false;
             canMove = false;
-            canAttack = false;
             Deathscreen.gameObject.SetActive(true);
             Time.timeScale = 0f;
             SettingsApplier.canPause = false;
