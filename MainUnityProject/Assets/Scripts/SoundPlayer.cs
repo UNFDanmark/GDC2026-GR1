@@ -1,11 +1,23 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
-public static class SoundPlayer
+public class SoundPlayer: MonoBehaviour
 {
-    public static void PlayRandomSound(AudioSource sigma, AudioClip[] phi)
+    AudioSource audioSource;
+    void Start()
     {
-        if (phi.Length == 0) return;
-        sigma.clip = phi[Random.Range(0, phi.Length)];
-        sigma.Play();
+        audioSource = GetComponent<AudioSource>();
+        SettingsManager.SettingsChangedEvent.AddListener(ReloadSettings);
+        ReloadSettings();
+    }
+
+    void OnDisable()
+    {
+        SettingsManager.SettingsChangedEvent.RemoveListener(ReloadSettings);
+    }
+
+    void ReloadSettings()
+    {
+        audioSource.volume = SettingsManager.MusicVolume;
     }
 }
