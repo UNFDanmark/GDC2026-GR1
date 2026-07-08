@@ -162,6 +162,7 @@ MonoBehaviour:
   Dasher: 1
   Normal: 0
   Ranged: 0
+  projectile: {fileID: 3463092863182956516, guid: bac7e50953de725428df3f675c2494bb, type: 3}
 --- !u!195 &405827482681457440
 NavMeshAgent:
   m_ObjectHideFlags: 0
