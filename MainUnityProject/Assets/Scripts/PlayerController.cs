@@ -34,7 +34,8 @@ public class PlayerController : MonoBehaviour
     [Header("Slide")]
     public InputActionReference actionSlide;
     public float slideSpeed, slideThreshold, slideCooldown, slideHeight;
-    bool dashing;
+    Vector3 slideVec;
+    bool sliding;
     
     [Header("Camera")]
     public InputActionReference actionLook;       // vector2
@@ -118,6 +119,8 @@ public class PlayerController : MonoBehaviour
             audioCooldownLeft = audioCooldown;
         }   
         audioCooldownLeft -= Time.deltaTime;
+        if(sliding)
+            rb.AddRelativeForce(slideVec * Time.deltaTime);
     }
 
     void Jump(InputAction.CallbackContext context)
@@ -155,22 +158,22 @@ public class PlayerController : MonoBehaviour
 
     void Slide(InputAction.CallbackContext context)
     {
-        if (!canDash || dashing) return;
+        if (!canDash || sliding) return;
         if (rb.linearVelocity.magnitude < slideThreshold) return;
-        dashing = true;
+        sliding = true;
         canDash = false;
         moveSpeed /= 5;
         
         animator.SetTrigger("crouching");
         Vector2 rawMoveInput = actionMovement.action.ReadValue<Vector2>();
-        Vector3 move = new Vector3(rawMoveInput.x, slideHeight, rawMoveInput.y);
-        move *= slideSpeed * rb.linearDamping;
-        rb.AddRelativeForce(move, ForceMode.Impulse);
+        slideVec = new Vector3(rawMoveInput.x, slideHeight, rawMoveInput.y);
+        slideVec *= slideSpeed * rb.linearDamping;
+        rb.AddRelativeForce(slideVec, ForceMode.Impulse);
     }
 
     void UnSlide(InputAction.CallbackContext context)
     {
-        if (!dashing) return;
+        if (!sliding) return;
         StartCoroutine(UnSlideI());
     }
 
@@ -179,14 +182,14 @@ public class PlayerController : MonoBehaviour
         for (bool real = true; real;)
         {
             real = false;
-            RaycastHit[] hi = Physics.RaycastAll(transform.position, Vector3.up, 1f);
+            RaycastHit[] hi = Physics.RaycastAll(transform.position - new Vector3(0, 0.25f, 0), Vector3.up, 1.5f);
             foreach (RaycastHit bye in hi)
                 if (bye.collider.gameObject.tag == "Ground")
                     real = true;
             yield return new WaitForNextFrameUnit();
         }
         moveSpeed *= 5;
-        dashing = false;
+        sliding = false;
         StartCoroutine(disableMovement(0, slideCooldown));
         animator.SetTrigger("uncrouching");
     }
