@@ -7,6 +7,10 @@ public class EnemyScript : MonoBehaviour
     GameObject player;
     NavMeshAgent agent;
     Rigidbody rb;
+
+
+    private float waitTime = 3.0f;
+    private float timer = 0.0f;
     void Start()
     {
         player = FindAnyObjectByType<PlayerController>().gameObject;
@@ -28,8 +32,20 @@ public class EnemyScript : MonoBehaviour
 
     void Update()
     {
-        if(agent.isActiveAndEnabled)
-            agent.SetDestination(player.transform.position);
+        timer += Time.deltaTime;
+
+        if (timer > waitTime)
+        {
+            
+            
+
+            if(agent.isActiveAndEnabled)
+                agent.SetDestination(player.transform.position);
+
+            timer = 0;
+        }
+        
+      
     }
 
     void OnTriggerEnter(Collider other)
