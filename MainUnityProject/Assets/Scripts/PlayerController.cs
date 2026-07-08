@@ -4,6 +4,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Rendering;
+using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour
 {
@@ -35,7 +36,7 @@ public class PlayerController : MonoBehaviour
     public InputActionReference actionSlide;
     public float slideSpeed, slideThreshold, slideCooldown, slideHeight;
     Vector3 slideVec;
-    bool sliding;
+    bool sliding, poop;
     
     [Header("Camera")]
     public InputActionReference actionLook;       // vector2
@@ -51,8 +52,13 @@ public class PlayerController : MonoBehaviour
     public AudioSource audioSourceDeath;
 
     [Header("Deathscreen")]
-    public Canvas Deathscreen; 
+    public Canvas Deathscreen;
 
+    [Header("Winscreen")] 
+    public Canvas winscreen;
+    
+    [Header("introscreen")] 
+    public Canvas introscreen;
    
     
     void Start()
@@ -73,6 +79,8 @@ public class PlayerController : MonoBehaviour
         animator = GetComponent<Animator>();
         SettingsManager.SettingsChangedEvent.AddListener(ReloadSettings);
         ReloadSettings();
+        
+        
     }
     void ReloadSettings()
     {
@@ -173,12 +181,13 @@ public class PlayerController : MonoBehaviour
 
     void UnSlide(InputAction.CallbackContext context)
     {
-        if (!sliding) return;
+        if (!sliding || poop) return;
         StartCoroutine(UnSlideI());
     }
 
     IEnumerator UnSlideI()
     {
+        poop = true;
         for (bool real = true; real;)
         {
             real = false;
@@ -192,6 +201,7 @@ public class PlayerController : MonoBehaviour
         sliding = false;
         StartCoroutine(disableMovement(0, slideCooldown));
         animator.SetTrigger("uncrouching");
+        poop = false;
     }
     
     IEnumerator disableMovement(float disableTime, float cooldown)
@@ -234,6 +244,49 @@ public class PlayerController : MonoBehaviour
 
     void OnCollisionEnter(Collision other)
     {
+        
+        
+        
+        if (invulnerable) return;
+        if (other.gameObject.CompareTag("Enemy"))
+        {
+            canDash = false;
+            canMove = false;
+            Deathscreen.gameObject.SetActive(true);
+            Time.timeScale = 0f;
+            SettingsApplier.canPause = false;
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+            audioSourceDeath.Play();
+        }
+    }
+
+
+   
+    
+    
+    
+    void OnTriggerEnter(Collider other)
+    {
+
+
+        if (other.gameObject.CompareTag("wincon"))
+        {
+            winscreen.enabled = true;
+            Time.timeScale = 0f;
+            SettingsApplier.canPause = false;
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+        }
+        
+        /*
+        if (other.gameObject.CompareTag("introcon"))
+        {
+            introscreen.enabled = true;
+        }
+        */
+            
+            
         if (invulnerable) return;
         if (other.gameObject.CompareTag("Enemy"))
         {

@@ -9,10 +9,16 @@ EditorBuildSettings:
     path: Assets/Scenes/Title Screen.unity
     guid: 1a02fd53a06dc7e4eac7b2facafe2b68
   - enabled: 1
-    path: Assets/Scenes/Programmering.unity
-    guid: 99c9720ab356a0642a771bea13969a05
-  - enabled: 1
     path: Assets/Scenes/Tutorial.unity
     guid: 21d4a122e1cd85942b1616ac49e64460
+  - enabled: 1
+    path: Assets/Scenes/Level 1.unity
+    guid: 29df879d55227be46846826e53ddf464
+  - enabled: 1
+    path: Assets/Scenes/Level 2.unity
+    guid: 1f44feb262084f441bb553eb8a608b60
+  - enabled: 1
+    path: Assets/Scenes/CrazyCattle4D.unity
+    guid: 588d4fefe7f123b47b689853b985910b
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
