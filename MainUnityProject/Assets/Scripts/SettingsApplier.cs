@@ -10,6 +10,7 @@ public class SettingsApplier : MonoBehaviour
 
     static bool paused;
     public static bool canPause = true;
+    PlayerController check;
     
     void Awake()
     {
@@ -30,6 +31,7 @@ public class SettingsApplier : MonoBehaviour
         SoundVolumeSlider.onValueChanged.AddListener(delegate { ApplySettings();});
         actionPause.action.Enable();
         actionPause.action.started += PauseHandler;
+        check = FindAnyObjectByType<PlayerController>();
     }
 
     void OnDisable()
@@ -63,17 +65,23 @@ public class SettingsApplier : MonoBehaviour
         if (paused)
         {
             pauseMenuCanvas.enabled = false;
-            Time.timeScale = 1f;
-            Cursor.lockState = CursorLockMode.Locked;
-            Cursor.visible = false;
+            if (check != null)
+            {
+                Time.timeScale = 1f;
+                Cursor.lockState = CursorLockMode.Locked;
+                Cursor.visible = false;
+            }
             paused = false;
         }
         else
         {
             pauseMenuCanvas.enabled = true;
-            Time.timeScale = 0f;
-            Cursor.lockState = CursorLockMode.None;
-            Cursor.visible = true;
+            if (check != null)
+            {
+                Time.timeScale = 0f;
+                Cursor.lockState = CursorLockMode.None;
+                Cursor.visible = true;
+            }
             paused = true;
         }
     }
