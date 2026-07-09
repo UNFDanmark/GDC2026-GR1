@@ -16,8 +16,8 @@ AudioContainerElement:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: missile_shoot_3_{-2815186463367114093}
-  m_AudioClip: {fileID: 8300000, guid: 89eab416d9f769245820dbc1364e89f6, type: 3}
+  m_Name: missile_shoot_{-2815186463367114093}
+  m_AudioClip: {fileID: 8300000, guid: 852d3342877e5904ba8f9d33f0503566, type: 3}
   m_Volume: 0
   m_Enabled: 1
 --- !u!1233149941 &1996916125079219048
@@ -26,8 +26,8 @@ AudioContainerElement:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: missile_shoot_{1996916125079219048}
-  m_AudioClip: {fileID: 8300000, guid: 852d3342877e5904ba8f9d33f0503566, type: 3}
+  m_Name: missile_shoot_3_{1996916125079219048}
+  m_AudioClip: {fileID: 8300000, guid: 89eab416d9f769245820dbc1364e89f6, type: 3}
   m_Volume: 0
   m_Enabled: 1
 --- !u!1307931743 &6418180475301049370
@@ -50,10 +50,10 @@ AudioRandomContainer:
   - {fileID: -8367454594751278096}
   - {fileID: 1996916125079219048}
   m_AvoidRepeatingLast: 0
-  m_PlaybackMode: 0
+  m_PlaybackMode: 2
   m_TriggerMode: 1
   m_AutomaticTriggerMode: 1
-  m_LoopMode: 2
+  m_LoopMode: 1
   m_VolumeRandomizationEnabled: 0
   m_PitchRandomizationEnabled: 1
   m_AutomaticTriggerTimeRandomizationEnabled: 0
