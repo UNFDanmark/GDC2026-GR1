@@ -27,6 +27,7 @@ public class specialautisticdoor : MonoBehaviour
             if (enemy != null)
                 counter++;
         }
+        text.SetText(counter.ToString());
 
         if (counter != 0) return;
         open = true;
