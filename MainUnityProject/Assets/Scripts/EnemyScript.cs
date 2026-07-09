@@ -4,6 +4,8 @@ using UnityEngine.AI;
 public class EnemyScript : MonoBehaviour
 {
     public AudioSource audioSourceDeath;
+    public AudioSource audioSourceSeen;
+    
     GameObject player;
     NavMeshAgent agent;
     Rigidbody rb;
@@ -44,8 +46,9 @@ public class EnemyScript : MonoBehaviour
             Vector3 origin = transform.position + direction;
             RaycastHit sexo;
             Physics.Raycast(origin, direction, out sexo);
-            if (sexo.collider.gameObject.CompareTag("Player")) hasSeenPlayer = true;
-            else return;
+            if (!sexo.collider.gameObject.CompareTag("Player")) return;
+            hasSeenPlayer = true;
+            audioSourceSeen.Play();
         }
         if (Dasher)
         {
