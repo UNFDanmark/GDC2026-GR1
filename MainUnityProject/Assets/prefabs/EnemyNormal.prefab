@@ -17,7 +17,7 @@ GameObject:
   - component: {fileID: 405827482681457440}
   - component: {fileID: 7155153996356784563}
   m_Layer: 0
-  m_Name: Misery
+  m_Name: EnemyNormal
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -54,7 +54,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4631449531959633687}
-  m_Enabled: 0
+  m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -159,6 +159,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: '::'
   audioSourceDeath: {fileID: 7155153996356784563}
+  Dasher: 0
+  Normal: 1
+  Ranged: 0
+  projectile: {fileID: 0}
 --- !u!195 &405827482681457440
 NavMeshAgent:
   m_ObjectHideFlags: 0

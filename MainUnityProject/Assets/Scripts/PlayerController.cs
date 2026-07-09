@@ -4,6 +4,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Rendering;
+using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour
 {
@@ -26,6 +27,7 @@ public class PlayerController : MonoBehaviour
     public float dashSpeed = 10f;
     public float dashDisablesMovementFor = 0.5f;
     public float dashCooldown = 2f;
+    public float dashITime = 0.5f;
     public Volume motionBlurVolume;
     public AudioSource audioSourceDash;
     bool canDash = true;
@@ -35,7 +37,7 @@ public class PlayerController : MonoBehaviour
     public InputActionReference actionSlide;
     public float slideSpeed, slideThreshold, slideCooldown, slideHeight;
     Vector3 slideVec;
-    bool sliding;
+    bool sliding, poop;
     
     [Header("Camera")]
     public InputActionReference actionLook;       // vector2
@@ -51,8 +53,13 @@ public class PlayerController : MonoBehaviour
     public AudioSource audioSourceDeath;
 
     [Header("Deathscreen")]
-    public Canvas Deathscreen; 
+    public Canvas Deathscreen;
 
+    [Header("Winscreen")] 
+    public Canvas winscreen;
+    
+    [Header("introscreen")] 
+    public Canvas introscreen;
    
     
     void Start()
@@ -73,6 +80,8 @@ public class PlayerController : MonoBehaviour
         animator = GetComponent<Animator>();
         SettingsManager.SettingsChangedEvent.AddListener(ReloadSettings);
         ReloadSettings();
+        
+        
     }
     void ReloadSettings()
     {
@@ -173,12 +182,13 @@ public class PlayerController : MonoBehaviour
 
     void UnSlide(InputAction.CallbackContext context)
     {
-        if (!sliding) return;
+        if (!sliding || poop) return;
         StartCoroutine(UnSlideI());
     }
 
     IEnumerator UnSlideI()
     {
+        poop = true;
         for (bool real = true; real;)
         {
             real = false;
@@ -190,24 +200,27 @@ public class PlayerController : MonoBehaviour
         }
         moveSpeed *= 5;
         sliding = false;
-        StartCoroutine(disableMovement(0, slideCooldown));
+        StartCoroutine(disableMovement(0, slideCooldown, false));
         animator.SetTrigger("uncrouching");
+        poop = false;
     }
     
-    IEnumerator disableMovement(float disableTime, float cooldown)
+    IEnumerator disableMovement(float disableTime, float cooldown, bool iFrames = true)
     {
         //Før/under dash
         canMove = false;
         canDash = false;
         rb.linearDamping /= 2;
-        invulnerable = true;
+        if(iFrames) invulnerable = true;
         yield return new WaitForSecondsRealtime(disableTime);
         //Efter dash
-        invulnerable = false;
         canMove = true;
         rb.linearDamping *= 2;
+        if(iFrames) yield return new WaitForSecondsRealtime(dashITime-disableTime);
+        if(iFrames) invulnerable = false;
         //Cooldown
-        yield return new WaitForSecondsRealtime(cooldown);
+        if(iFrames) yield return new WaitForSecondsRealtime(cooldown-dashITime-disableTime);
+        else yield return new WaitForSecondsRealtime(cooldown-disableTime);
         canDash = true;
     }
 
@@ -234,6 +247,49 @@ public class PlayerController : MonoBehaviour
 
     void OnCollisionEnter(Collision other)
     {
+        
+        
+        
+        if (invulnerable) return;
+        if (other.gameObject.CompareTag("Enemy"))
+        {
+            canDash = false;
+            canMove = false;
+            Deathscreen.gameObject.SetActive(true);
+            Time.timeScale = 0f;
+            SettingsApplier.canPause = false;
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+            audioSourceDeath.Play();
+        }
+    }
+
+
+   
+    
+    
+    
+    void OnTriggerEnter(Collider other)
+    {
+
+
+        if (other.gameObject.CompareTag("wincon"))
+        {
+            winscreen.enabled = true;
+            Time.timeScale = 0f;
+            SettingsApplier.canPause = false;
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+        }
+        
+        /*
+        if (other.gameObject.CompareTag("introcon"))
+        {
+            introscreen.enabled = true;
+        }
+        */
+            
+            
         if (invulnerable) return;
         if (other.gameObject.CompareTag("Enemy"))
         {

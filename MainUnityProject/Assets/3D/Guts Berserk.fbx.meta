@@ -1,15 +1,30 @@
 fileFormatVersion: 2
-guid: 1676ed4d57e1db2479f455f0235667e3
+guid: ab8d665975bd65a448f571a251ee8f95
 ModelImporter:
   serializedVersion: 24501
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Material.001
+    second: {fileID: 2100000, guid: ed564b9098645de4896b2c2de9ac9c44, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Material.002
+    second: {fileID: 2100000, guid: 17f0837412d8cb14b9cf23bb6075a5ce, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Material.003
+    second: {fileID: 2100000, guid: 6788d7d01e3db1a4ba865c9a242a7e76, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
     materialSearch: 1
     materialLocation: 1
-    searchTexturesGlobally: 0
+    searchTexturesGlobally: 1
   animations:
     legacyGenerateAnimations: 4
     bakeSimulation: 0
