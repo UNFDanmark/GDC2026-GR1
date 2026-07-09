@@ -1,33 +1,34 @@
 using TMPro;
 using UnityEngine;
 
-public class dooropener : MonoBehaviour
+public class specialautisticdoor : MonoBehaviour
 {
     bool open;
     Animator animator;
     public GameObject[] enemies;
 
     public TextMeshPro text;
-    public bool HasCounter;
+  
     int counter;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         animator = GetComponent<Animator>();
-        counter = enemies.Length;
     }
 
     // Update is called once per frame
     void Update()
     {
-      
-        
+
+        counter = 0;
         if (open) return;
         foreach (GameObject enemy in enemies)
         {
             if (enemy != null)
-                return;
+                counter++;
         }
+
+        if (counter != 0) return;
         open = true;
         animator.SetTrigger("open");
 
