@@ -6,15 +6,10 @@ public class dooropener : MonoBehaviour
     bool open;
     Animator animator;
     public GameObject[] enemies;
-
-    public TextMeshPro text;
-    public bool HasCounter;
-    int counter;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         animator = GetComponent<Animator>();
-        counter = enemies.Length;
     }
 
     // Update is called once per frame
