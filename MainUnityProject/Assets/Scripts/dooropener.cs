@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 
 public class dooropener : MonoBehaviour
@@ -14,6 +15,8 @@ public class dooropener : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+      
+        
         if (open) return;
         foreach (GameObject enemy in enemies)
         {

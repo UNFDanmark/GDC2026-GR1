@@ -1,0 +1,137 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1233149941 &-8390997498300953086
+AudioContainerElement:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: enemy_2_bop_bop_10_{-8390997498300953086}
+  m_AudioClip: {fileID: 8300000, guid: f27593019e9009149881d1bfa535fcd7, type: 3}
+  m_Volume: 0
+  m_Enabled: 1
+--- !u!1233149941 &-8296518100420376064
+AudioContainerElement:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: enemy_2_bop_bop_7_{-8296518100420376064}
+  m_AudioClip: {fileID: 8300000, guid: 2ba95a72f7ccc2a44846346f20312ddb, type: 3}
+  m_Volume: 0
+  m_Enabled: 1
+--- !u!1233149941 &-2853697698169815171
+AudioContainerElement:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: enemy_2_bop_bop_8_{-2853697698169815171}
+  m_AudioClip: {fileID: 8300000, guid: 76fcc80e218b7fa4d886dca55b8ad8ce, type: 3}
+  m_Volume: 0
+  m_Enabled: 1
+--- !u!1233149941 &-1899795304582735853
+AudioContainerElement:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: enemy_2_bop_bop_6_{-1899795304582735853}
+  m_AudioClip: {fileID: 8300000, guid: 985c9efc2a1cc9a4ca8f8b8df41e0374, type: 3}
+  m_Volume: 0
+  m_Enabled: 1
+--- !u!1233149941 &-1894213263042650776
+AudioContainerElement:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: enemy_2_bop_bop_4_{-1894213263042650776}
+  m_AudioClip: {fileID: 8300000, guid: b05a1a9292b9875419c7635e482706be, type: 3}
+  m_Volume: 0
+  m_Enabled: 1
+--- !u!1233149941 &-1666640431163305257
+AudioContainerElement:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: enemy_2_bop_bop_5_{-1666640431163305257}
+  m_AudioClip: {fileID: 8300000, guid: 8aafa5e795e46d248be7fb8ddb882c76, type: 3}
+  m_Volume: 0
+  m_Enabled: 1
+--- !u!1233149941 &1820359740086436770
+AudioContainerElement:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: enemy_2_bop_bop_{1820359740086436770}
+  m_AudioClip: {fileID: 8300000, guid: 5acfdd40fafbb654b8add067849715cf, type: 3}
+  m_Volume: 0
+  m_Enabled: 1
+--- !u!1233149941 &4349168296635815464
+AudioContainerElement:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: enemy_2_bop_bop_2_{4349168296635815464}
+  m_AudioClip: {fileID: 8300000, guid: a8dac6a75e754b544b55e765f071c07a, type: 3}
+  m_Volume: 0
+  m_Enabled: 1
+--- !u!1233149941 &6020244624200402264
+AudioContainerElement:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: enemy_2_bop_bop_9_{6020244624200402264}
+  m_AudioClip: {fileID: 8300000, guid: 7da730e408687b045a545cb07c8c41f3, type: 3}
+  m_Volume: 0
+  m_Enabled: 1
+--- !u!1307931743 &6418180475301049370
+AudioRandomContainer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Enemy2BopBop
+  m_Volume: 0
+  m_Pitch: 0
+  m_AutomaticTriggerTime: 0
+  m_LoopCount: 1
+  m_VolumeRandomizationRange: {x: 0, y: 0}
+  m_PitchRandomizationRange: {x: 0, y: 0}
+  m_AutomaticTriggerTimeRandomizationRange: {x: 0, y: 0}
+  m_LoopCountRandomizationRange: {x: 0, y: 0}
+  m_Elements:
+  - {fileID: 1820359740086436770}
+  - {fileID: 4349168296635815464}
+  - {fileID: 7108042321152279927}
+  - {fileID: -1894213263042650776}
+  - {fileID: -1666640431163305257}
+  - {fileID: -1899795304582735853}
+  - {fileID: -8296518100420376064}
+  - {fileID: -2853697698169815171}
+  - {fileID: 6020244624200402264}
+  - {fileID: -8390997498300953086}
+  m_AvoidRepeatingLast: 0
+  m_PlaybackMode: 0
+  m_TriggerMode: 1
+  m_AutomaticTriggerMode: 1
+  m_LoopMode: 2
+  m_VolumeRandomizationEnabled: 0
+  m_PitchRandomizationEnabled: 0
+  m_AutomaticTriggerTimeRandomizationEnabled: 0
+  m_LoopCountRandomizationEnabled: 0
+--- !u!1233149941 &7108042321152279927
+AudioContainerElement:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: enemy_2_bop_bop_3_{7108042321152279927}
+  m_AudioClip: {fileID: 8300000, guid: ccbf72b5f521d33428be929c4a2aba67, type: 3}
+  m_Volume: 0
+  m_Enabled: 1

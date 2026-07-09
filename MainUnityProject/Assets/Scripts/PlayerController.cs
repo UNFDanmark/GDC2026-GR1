@@ -88,6 +88,7 @@ public class PlayerController : MonoBehaviour
         audioSourceJump.volume = SettingsManager.SoundVolume;
         audioSourceDash.volume = SettingsManager.SoundVolume;
         audioSourceAttack.volume = SettingsManager.SoundVolume;
+        audioSourceDeath.volume = SettingsManager.SoundVolume;
         cameraSensX = SettingsManager.CameraSensX;
         cameraSensY = SettingsManager.CameraSensY;
     }
