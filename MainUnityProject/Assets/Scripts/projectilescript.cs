@@ -17,6 +17,7 @@ public class projectilescript : MonoBehaviour
         target = FindAnyObjectByType<PlayerController>().gameObject;
         rb.AddForce(new Vector3(0, InitialSpeed*rb.linearDamping, 0), ForceMode.Impulse);
         Destroy(gameObject, LifeTime);
+        shootAudioSource.volume = SettingsManager.SoundVolume;
         shootAudioSource.Play();
     }
 

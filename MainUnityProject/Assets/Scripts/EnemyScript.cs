@@ -36,6 +36,7 @@ public class EnemyScript : MonoBehaviour
     void ReloadSettings()
     {
         audioSourceDeath.volume = SettingsManager.SoundVolume;
+        audioSourceSeen.volume = SettingsManager.SoundVolume;
     }
 
     void Update()
