@@ -27,6 +27,7 @@ public class PlayerController : MonoBehaviour
     public float dashSpeed = 10f;
     public float dashDisablesMovementFor = 0.5f;
     public float dashCooldown = 2f;
+    public float dashITime = 0.5f;
     public Volume motionBlurVolume;
     public AudioSource audioSourceDash;
     bool canDash = true;
@@ -199,25 +200,27 @@ public class PlayerController : MonoBehaviour
         }
         moveSpeed *= 5;
         sliding = false;
-        StartCoroutine(disableMovement(0, slideCooldown));
+        StartCoroutine(disableMovement(0, slideCooldown, false));
         animator.SetTrigger("uncrouching");
         poop = false;
     }
     
-    IEnumerator disableMovement(float disableTime, float cooldown)
+    IEnumerator disableMovement(float disableTime, float cooldown, bool iFrames = true)
     {
         //Før/under dash
         canMove = false;
         canDash = false;
         rb.linearDamping /= 2;
-        invulnerable = true;
+        if(iFrames) invulnerable = true;
         yield return new WaitForSecondsRealtime(disableTime);
         //Efter dash
-        invulnerable = false;
         canMove = true;
         rb.linearDamping *= 2;
+        if(iFrames) yield return new WaitForSecondsRealtime(dashITime-disableTime);
+        if(iFrames) invulnerable = false;
         //Cooldown
-        yield return new WaitForSecondsRealtime(cooldown);
+        if(iFrames) yield return new WaitForSecondsRealtime(cooldown-dashITime-disableTime);
+        else yield return new WaitForSecondsRealtime(cooldown-disableTime);
         canDash = true;
     }
 

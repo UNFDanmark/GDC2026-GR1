@@ -10,7 +10,7 @@ public class EnemyScript : MonoBehaviour
     public bool Dasher, Normal, Ranged;
     bool hasSeenPlayer;
 
-    private float waitTime = 3.0f;
+    private float waitTime = 1.0f;
     private float timer = 0.0f;
 
 
@@ -52,14 +52,12 @@ public class EnemyScript : MonoBehaviour
             timer += Time.deltaTime;
             if (timer < waitTime) return;
             timer = 0;
-        } else if (Ranged)
+        }
+        if (Ranged)
         {
             timer += Time.deltaTime;
             if (timer < waitTime) return;
-
             Instantiate(projectile, transform.position + new Vector3(0, 1, 0), transform.rotation);
-            
-            
             timer = 0;
         }
         if(agent.isActiveAndEnabled)
