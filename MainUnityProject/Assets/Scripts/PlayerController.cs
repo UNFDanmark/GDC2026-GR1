@@ -30,14 +30,13 @@ public class PlayerController : MonoBehaviour
     public float dashITime = 0.5f;
     public Volume motionBlurVolume;
     public AudioSource audioSourceDash;
-    bool canDash = true;
-    bool invulnerable = false;
+    bool invulnerable, canDash = true;
     
     [Header("Slide")]
     public InputActionReference actionSlide;
     public float slideSpeed, slideThreshold, slideCooldown, slideHeight;
     Vector3 slideVec;
-    bool sliding, poop;
+    bool sliding, poop, canSlide = true;
     
     [Header("Camera")]
     public InputActionReference actionLook;       // vector2
@@ -150,7 +149,7 @@ public class PlayerController : MonoBehaviour
         if (!canDash) return;
         Vector2 rawMoveInput = actionMovement.action.ReadValue<Vector2>();
         if (rawMoveInput == Vector2.zero) return;
-        StartCoroutine(disableMovement(dashDisablesMovementFor, dashCooldown));
+        StartCoroutine(dashDown(dashDisablesMovementFor, dashCooldown));
         StartCoroutine(lerpCamera());
         
         Vector3 move = new Vector3(rawMoveInput.x, 0, rawMoveInput.y);
@@ -164,12 +163,32 @@ public class PlayerController : MonoBehaviour
         Destroy(tmpAttackBox, attackLifetime);
         audioSourceDash.Play();
     }
+    IEnumerator dashDown(float disableTime, float cooldown)
+    {
+        //Før/under dash
+        canMove = false;
+        canDash = false;
+        canSlide = false;
+        rb.linearDamping /= 2;
+        invulnerable = true;
+        yield return new WaitForSecondsRealtime(disableTime);
+        //Efter dash
+        canSlide = true;
+        canMove = true;
+        rb.linearDamping *= 2;
+        yield return new WaitForSecondsRealtime(dashITime-disableTime);
+        invulnerable = false;
+        //Cooldown
+        yield return new WaitForSecondsRealtime(cooldown-dashITime-disableTime);
+        canDash = true;
+    }
 
     void Slide(InputAction.CallbackContext context)
     {
-        if (!canDash || sliding) return;
+        if (!canSlide || sliding) return;
         if (rb.linearVelocity.magnitude < slideThreshold) return;
         sliding = true;
+        canSlide = false;
         canDash = false;
         moveSpeed /= 5;
         
@@ -200,28 +219,11 @@ public class PlayerController : MonoBehaviour
         }
         moveSpeed *= 5;
         sliding = false;
-        StartCoroutine(disableMovement(0, slideCooldown, false));
+        canDash = true;
         animator.SetTrigger("uncrouching");
         poop = false;
-    }
-    
-    IEnumerator disableMovement(float disableTime, float cooldown, bool iFrames = true)
-    {
-        //Før/under dash
-        canMove = false;
-        canDash = false;
-        rb.linearDamping /= 2;
-        if(iFrames) invulnerable = true;
-        yield return new WaitForSecondsRealtime(disableTime);
-        //Efter dash
-        canMove = true;
-        rb.linearDamping *= 2;
-        if(iFrames) yield return new WaitForSecondsRealtime(dashITime-disableTime);
-        if(iFrames) invulnerable = false;
-        //Cooldown
-        if(iFrames) yield return new WaitForSecondsRealtime(cooldown-dashITime-disableTime);
-        else yield return new WaitForSecondsRealtime(cooldown-disableTime);
-        canDash = true;
+        yield return new WaitForSecondsRealtime(slideCooldown);
+        canSlide = true;
     }
 
     IEnumerator lerpCamera()
