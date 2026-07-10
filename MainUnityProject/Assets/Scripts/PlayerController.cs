@@ -253,17 +253,8 @@ public class PlayerController : MonoBehaviour
         
         
         if (invulnerable) return;
-        if (other.gameObject.CompareTag("Enemy"))
-        {
-            canDash = false;
-            canMove = false;
-            Deathscreen.gameObject.SetActive(true);
-            Time.timeScale = 0f;
-            SettingsApplier.canPause = false;
-            Cursor.lockState = CursorLockMode.None;
-            Cursor.visible = true;
-            audioSourceDeath.Play();
-        }
+        if (other.gameObject.CompareTag("Enemy")) die();
+
     }
 
 
@@ -293,17 +284,18 @@ public class PlayerController : MonoBehaviour
             
             
         if (invulnerable) return;
-        if (other.gameObject.CompareTag("Enemy"))
-        {
-            canDash = false;
-            canMove = false;
-            SoundPlayer.stopMusic.Invoke();
-            Deathscreen.gameObject.SetActive(true);
-            Time.timeScale = 0f;
-            SettingsApplier.canPause = false;
-            Cursor.lockState = CursorLockMode.None;
-            Cursor.visible = true;
-            audioSourceDeath.Play();
-        }
+        if (other.gameObject.CompareTag("Enemy")) die();
+    }
+    void die()
+    {
+        canDash = false;
+        canMove = false;
+        SoundPlayer.stopMusic.Invoke();
+        Deathscreen.gameObject.SetActive(true);
+        Time.timeScale = 0f;
+        SettingsApplier.canPause = false;
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+        audioSourceDeath.Play();
     }
 }

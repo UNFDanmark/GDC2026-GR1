@@ -17,7 +17,6 @@ GameObject:
   - component: {fileID: 405827482681457440}
   - component: {fileID: 7155153996356784563}
   - component: {fileID: 9171174111964373194}
-  - component: {fileID: 6281729030201224188}
   m_Layer: 0
   m_Name: EnemyDasher
   m_TagString: Enemy
@@ -382,27 +381,6 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!135 &6281729030201224188
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4631449531959633687}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Radius: 0.99939275
-  m_Center: {x: 0.73, y: 1.0161049, z: 2.446847}
 --- !u!1001 &4621824300999966042
 PrefabInstance:
   m_ObjectHideFlags: 0

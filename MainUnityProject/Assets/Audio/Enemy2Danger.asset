@@ -37,7 +37,7 @@ AudioRandomContainer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Enemy2Danger
-  m_Volume: 0
+  m_Volume: -20
   m_Pitch: 0
   m_AutomaticTriggerTime: 0
   m_LoopCount: 1
@@ -50,10 +50,10 @@ AudioRandomContainer:
   - {fileID: -5488346611497792521}
   - {fileID: 1958020975028876700}
   m_AvoidRepeatingLast: 0
-  m_PlaybackMode: 0
+  m_PlaybackMode: 2
   m_TriggerMode: 1
   m_AutomaticTriggerMode: 1
-  m_LoopMode: 2
+  m_LoopMode: 1
   m_VolumeRandomizationEnabled: 0
   m_PitchRandomizationEnabled: 0
   m_AutomaticTriggerTimeRandomizationEnabled: 0
