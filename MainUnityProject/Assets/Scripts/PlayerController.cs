@@ -4,7 +4,6 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Rendering;
-using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour
 {
@@ -298,6 +297,7 @@ public class PlayerController : MonoBehaviour
         {
             canDash = false;
             canMove = false;
+            SoundPlayer.stopMusic.Invoke();
             Deathscreen.gameObject.SetActive(true);
             Time.timeScale = 0f;
             SettingsApplier.canPause = false;
