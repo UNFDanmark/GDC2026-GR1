@@ -75,10 +75,9 @@ public class EnemyScript : MonoBehaviour
             agent.enabled = false;
             // <insert animation here>
             GetComponent<Collider>().enabled = false;
-           /* Vector3 cool = (transform.position - player.transform.position).normalized * 80;// + new Vector3(0, 30, 0);
+            Vector3 cool = (transform.position - player.transform.position).normalized * 80;// + new Vector3(0, 30, 0);
             cool.y = 30;
             rb.linearVelocity = cool;
-            */
             
             // </insert animation here>
             audioSourceDeath.Play();
